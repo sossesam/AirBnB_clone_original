@@ -19,7 +19,7 @@ class BaseModel:
         dict = self.__dict__.copy()
         dict["id"] = self.id
         dict["__class__"] = str(self.__class__.__name__)
-        dict["created_at"] = datetime.now()
-        dict["updated_at"]= datetime.now()
+        dict["created_at"] = self.updated_at.isoformat()
+        dict["updated_at"]= self.created_at.isoformat()
         return dict
 
