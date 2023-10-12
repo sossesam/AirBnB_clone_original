@@ -1,6 +1,4 @@
 #!/usr/bin/python3
 """
-Instantiation file that starts the file storage system
+Instantiation file that starts the file storage 
 """
-
-from models.base_model import BaseModel
