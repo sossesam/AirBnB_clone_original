@@ -1,22 +1,25 @@
-import uuid
+#!/usr/bin/python3
+""" This is the Base model classs"""
+
+from uuid import uuid4
 from datetime import datetime
 
 class BaseModel:
-    id = str(uuid.uuid4())
-    created_at = datetime.now()
-    updated_at = datetime.now()
+    id:str = str(uuid4())
+    created_at:datetime = datetime.now()
+    updated_at: datetime = datetime.now()
 
     def __str__(self):
-        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
+        return f"[{type(self).__name__}] ({self.id}) {type(self).__dict__}"
 
     def save(self):
         self.updated_at = datetime.now()
-
+    
     def to_dict(self):
-        dict_data = self.__dict__.copy()
-        dict_data["__class__"] = self.__class__.__name__
-        dict_data["created_at"] = self.created_at.isoformat()
-        dict_data["updated_at"] = self.updated_at.isoformat()
-        return dict_data
-
+        dict = self.__dict__.copy()
+        dict["id"] = self.id
+        dict["__class__"] = str(self.__class__.__name__)
+        dict["created_at"] = self.updated_at.isoformat()
+        dict["updated_at"]= self.created_at.isoformat()
+        return dict
 
