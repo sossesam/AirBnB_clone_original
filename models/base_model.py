@@ -5,9 +5,23 @@ from uuid import uuid4
 from datetime import datetime
 
 class BaseModel:
-    id:str = str(uuid4())
-    created_at:datetime = datetime.now()
-    updated_at: datetime = datetime.now()
+    def __init__(self, *args, **kwargs):
+
+        if kwargs:
+            if kwargs["__class__"]:
+                del kwargs["__class__"]
+            for key, val in kwargs.items():
+                print(f"{key} - {val}")
+                if key == "created_at" or key == "updated_at":
+                    val = datetime.strptime(val,"%Y-%m-%dT%H:%M:%S.%f")
+                    
+                setattr(self,key,val)
+        else:
+            self.id = str(uuid4())
+            self.created_at = self.updated_at = datetime.now()
+            
+
+
 
     def __str__(self):
         return f"[{type(self).__name__}] ({self.id}) {type(self).__dict__}"
@@ -21,5 +35,5 @@ class BaseModel:
         dict["__class__"] = str(self.__class__.__name__)
         dict["created_at"] = self.updated_at.isoformat()
         dict["updated_at"]= self.created_at.isoformat()
-        return dict
 
+        return dict
