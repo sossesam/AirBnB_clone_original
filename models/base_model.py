@@ -1,12 +1,21 @@
 #!/usr/bin/python3
-""" This is the Base model classs"""
-
+"""Defines all common attributes/methods for other classes
+"""
 from uuid import uuid4
 from datetime import datetime
-from models import storage
+import models
+
 
 class BaseModel:
+    """Base class for all models"""
+
     def __init__(self, *args, **kwargs):
+        """Initialize a new BaseModel.
+
+        Args:
+            *args (any): Unused.
+            **kwargs (dict): Key/value pairs of attributes.
+        """
         self.id = str(uuid4())
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
@@ -20,22 +29,27 @@ class BaseModel:
                     value = datetime.strptime(value, fmt)
                 setattr(self, key, value)
         else:
-            storage.new(self)
-
-
-    def __str__(self):
-        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
+            models.storage.new(self)
 
     def save(self):
+        """Updates updated_at with the current datetime"""
         self.updated_at = datetime.now()
-        storage.save()
-
+        models.storage.save()
 
     def to_dict(self):
-        dict = self.__dict__.copy()
-        dict["id"] = self.id
-        dict["__class__"] = self.__class__.__name__
-        dict["created_at"] = self.updated_at.isoformat()
-        dict["updated_at"]= self.created_at.isoformat()
+        """Returns a dictionary that contains all
+        keys/values of the instance"""
 
-        return dict
+        clsName = self.__class__.__name__
+        classDict = self.__dict__.copy()
+        classDict['updated_at'] = self.updated_at.isoformat()
+        classDict['created_at'] = self.created_at.isoformat()
+        classDict['__class__'] = clsName
+
+        return classDict
+
+    def __str__(self):
+        """Representation of BaseModel instances"""
+
+        clsName = self.__class__.__name__
+        return "[{}] ({}) {}".format(clsName, self.id, self.__dict__)
