@@ -32,16 +32,16 @@ class BaseModel:
 
     def to_dict(self):
         
-        clsName = self.__class__.__name__
-        classDict = self.__dict__.copy()
-        classDict['updated_at'] = self.updated_at.isoformat()
-        classDict['created_at'] = self.created_at.isoformat()
-        classDict['__class__'] = clsName
+        name = self.__class__.__name__
+        dict = self.__dict__.copy()
+        dict['updated_at'] = self.updated_at.isoformat()
+        dict['created_at'] = self.created_at.isoformat()
+        dict['__class__'] = name
 
-        return classDict
+        return dict
 
     def __str__(self):
        
 
-        clsName = self.__class__.__name__
-        return "[{}] ({}) {}".format(clsName, self.id, self.__dict__)
+        name = self.__class__.__name__
+        return "[{}] ({}) {}".format(name, self.id, self.__dict__)
