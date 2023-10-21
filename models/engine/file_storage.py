@@ -1,14 +1,8 @@
-#!/usr/bin/python3
-
-"""pass"""
-
 import json
+import os
+import models
 
 class FileStorage:
-    """
-    pass
-
-    """
     __file_path = "file.json"
     __objects = {}
 
@@ -17,24 +11,22 @@ class FileStorage:
 
     def new(self, obj):
         if obj:
-            key =  f"{type(obj).__name__}.{obj.id}"
+            key = f"{obj.__class__.__name__}.{obj.id}"
             self.__objects[key] = obj
 
     def save(self):
-        object_dict = {}
+        dict_to_json = {}
+        for key, value in FileStorage.__objects.items():
+            dict_to_json[key] = value.to_dict()
 
-        for key, value in self.__objects.items():
-            self.__objects[key] = value.to_dict()
-        with open(self.__file_path, "w", encoding="UTF-8") as f:
-            json.dump(object_dict, f, indent = 4)
+        with open(self.__file_path, "w") as json_file:
+             json.dump(dict_to_json, json_file)
+
+
     def reload(self):
-    
-        try:
-            with open(self.__file_path, "r", encoding="UTF-8") as f:
-                obj  = json.load(f)
-            for key, value in obj.items():
-                self.__objects[key] = value
-            print(obj)
-        except FileNotFoundError:
-            pass
-
+        
+        with open(self.__file_path, encoding="UTF-8") as myfile:
+                obj_dict = json.load(myfile)
+                
+        for obj in obj_dict.values():
+            print(obj["__class__"])
